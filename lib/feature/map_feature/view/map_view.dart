@@ -4,15 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wheatmap/feature/map_feature/controller/bloc/bloc_bloc.dart';
 import 'package:wheatmap/feature/map_feature/widget/google_map.dart';
-import 'package:wheatmap/feature/map_feature/widget/map_search_bar.dart';
-import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
 
 //local libraries
 
 class MapTable extends StatelessWidget {
-  MapTable({super.key});
-
-  final FloatingSearchBarController controller = FloatingSearchBarController();
+  const MapTable({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +25,10 @@ class MapTable extends StatelessWidget {
                           Color.fromARGB(255, 111, 223, 115))),
                 );
               case MapStatus.loading:
-                return MapView(
-                  location: state.searchLocation,
-                  isLoading: true,
-                );
+                return const MapView();
               case MapStatus.loadingMore:
                 return MapView(
                   points: state.displayPoints,
-                  isLoading: true,
                 );
               case MapStatus.loaded:
                 return MapView(points: state.displayPoints);
@@ -45,8 +37,8 @@ class MapTable extends StatelessWidget {
             }
           },
         ),
-        //search bar
-        Positioned(top: 70, child: MapSearchBar()),
+        // //search bar
+        // Positioned(top: 70, child: MapSearchBar()),
       ],
     );
   }

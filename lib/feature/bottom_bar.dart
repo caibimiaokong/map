@@ -24,7 +24,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   //页面列表
   final List<Widget> _page = <Widget>[
-    MapTable(),
+    const MapTable(),
     const ArticleScreen(),
     const ProfileScreen(),
   ];

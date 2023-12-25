@@ -52,18 +52,23 @@ class MapRespository {
     }
   }
 
-  Future getDisplayPointsByLocation(LatLng location, bool iswheatDisplay,
-      bool isRescueDisplay, bool isHarvestDisplay) async {
+  Future getDisplayPointsByLocation(
+      {required double longitude,
+      required double latitude,
+      bool? iswheatDisplay = true,
+      bool? isRescueDisplay = true,
+      bool? isHarvestDisplay = true}) async {
     late final PostgrestResponse res;
     res = await _supabaseClient.rpc(
-      'nearby_videos',
+      'display_point',
       params: <String, dynamic>{
-        'location': 'POINT(${location.longitude} ${location.latitude})',
-        'wheat': iswheatDisplay,
-        'rescue': isRescueDisplay,
-        'harvest': isHarvestDisplay,
+        'long': longitude,
+        'lat': latitude,
+        'iswheat': iswheatDisplay,
+        'isharvest': isHarvestDisplay,
+        'isrescue': isRescueDisplay,
       },
-    ).limit(5);
+    );
 
     final status = res.status;
     final data = res.data;
@@ -82,15 +87,15 @@ class MapRespository {
       bool isRescueDisplay, bool isHarvestDisplay) async {
     late final PostgrestResponse res;
     res = await _supabaseClient.rpc(
-      'videos_in_bounds',
+      'points_in_view',
       params: <String, dynamic>{
-        'min_lng': '${bounds.southwest.longitude}',
-        'min_lat': '${bounds.southwest.latitude}',
-        'max_lng': '${bounds.northeast.longitude}',
-        'max_lat': '${bounds.northeast.latitude}',
-        'wheat': iswheatDisplay,
-        'rescue': isRescueDisplay,
-        'harvest': isHarvestDisplay,
+        'min_long': bounds.southwest.longitude,
+        'min_lat': bounds.southwest.latitude,
+        'max_long': bounds.northeast.longitude,
+        'max_lat': bounds.northeast.latitude,
+        'iswheat': iswheatDisplay,
+        'isrescue': isRescueDisplay,
+        'isharvest': isHarvestDisplay,
       },
     );
 

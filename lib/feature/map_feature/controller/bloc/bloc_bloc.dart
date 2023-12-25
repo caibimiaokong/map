@@ -67,10 +67,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         searchLocation: searchLocation,
       ));
       final points = await _mapRespository.getDisplayPointsByLocation(
-          state.searchLocation,
-          state.iswheatDisplay,
-          state.isHarvestDisplay,
-          state.isRescueDisplay);
+          longitude: searchLocation.longitude,
+          latitude: searchLocation.latitude,
+          iswheatDisplay: state.iswheatDisplay,
+          isHarvestDisplay: state.isHarvestDisplay,
+          isRescueDisplay: state.isRescueDisplay);
       emit(state.copyWith(
         status: MapStatus.loaded,
         stations: points,
@@ -188,8 +189,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future _onOnCameraMoveEvent(
       OnCameraMoveEvent event, Emitter<MapState> emit) async {
-         emit(state.copyWith(cameraPosition: event.cameraPosition));
-      }
+    emit(state.copyWith(cameraPosition: event.cameraPosition));
+  }
 
   //////////Helper functions
   //get next level

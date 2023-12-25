@@ -17,16 +17,10 @@ class MapView extends StatefulWidget {
   const MapView({
     Key? key,
     List<DisplyPoint>? points,
-    LatLng? location,
-    bool? isLoading,
   })  : _points = points ?? const [],
-        _location = location ?? const LatLng(0, 0),
-        _isLoading = isLoading ?? false,
         super(key: key);
 
   final List<DisplyPoint> _points;
-  final LatLng _location;
-  final bool _isLoading;
 
   @override
   State<MapView> createState() => _MapViewState();
