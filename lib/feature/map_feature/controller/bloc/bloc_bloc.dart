@@ -88,7 +88,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   //fetch display points from supabase by bounds
   Future _onFetchByBounds(FetchByBounds event, Emitter<MapState> emit) async {
     try {
-      emit(state.copyWith(status: MapStatus.loadingMore));
+      emit(state.copyWith(status: MapStatus.loading));
       final points = await _mapRespository.getDisplayPointsByBounds(
           state.bounds!,
           state.iswheatDisplay,

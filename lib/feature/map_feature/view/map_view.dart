@@ -26,10 +26,6 @@ class MapTable extends StatelessWidget {
                 );
               case MapStatus.loading:
                 return const MapView();
-              case MapStatus.loadingMore:
-                return MapView(
-                  points: state.displayPoints,
-                );
               case MapStatus.loaded:
                 return MapView(points: state.displayPoints);
               case MapStatus.error:

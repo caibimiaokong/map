@@ -1,6 +1,6 @@
 part of 'bloc_bloc.dart';
 
-enum MapStatus { initial, loading, loadingMore, loaded, error }
+enum MapStatus { initial, loading, loaded, error }
 
 class MapState extends Equatable {
   final MapStatus status;
@@ -15,7 +15,7 @@ class MapState extends Equatable {
   final DisplyPoint? selectedPoint;
   final String searchQuery;
   final bool isSerachFocus;
-  final List<Resources> recentSearches; 
+  final List<Resources> recentSearches;
   final List<Resources> resources;
 
   const MapState({
@@ -31,7 +31,7 @@ class MapState extends Equatable {
       target: LatLng(47.808376, 14.373285),
       zoom: 8,
     ),
-    this.selectedPoint, //own after search a place,Dont't need to navigate,so it's useless
+    this.selectedPoint, //selectedPoint is used to display bottom sheet
     this.searchQuery = '',
     this.isSerachFocus = false,
     this.recentSearches = const <Resources>[],
