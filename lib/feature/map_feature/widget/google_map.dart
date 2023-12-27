@@ -121,6 +121,7 @@ class _MapViewState extends State<MapView> {
             _harvestClusterManager.onCameraMove(position);
           },
           onCameraIdle: () {
+            mapBloc.add(FetchByBounds());
             _wheatClusterManager.updateMap();
             _rescueClusterManager.updateMap();
             _harvestClusterManager.updateMap();

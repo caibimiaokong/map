@@ -6,7 +6,6 @@ class MapState extends Equatable {
   final MapStatus status;
   final LatLng searchLocation;
   final List<DisplyPoint> displayPoints;
-  final LatLngBounds? bounds;
   final MapType mapType;
   final bool iswheatDisplay;
   final bool isRescueDisplay;
@@ -21,7 +20,6 @@ class MapState extends Equatable {
   const MapState({
     this.status = MapStatus.initial,
     this.searchLocation = const LatLng(37.43296265331129, -122.08832357078792),
-    this.bounds,
     this.displayPoints = const <DisplyPoint>[],
     this.mapType = MapType.normal,
     this.iswheatDisplay = true,
@@ -41,7 +39,6 @@ class MapState extends Equatable {
   MapState copyWith({
     MapStatus? status,
     LatLng? searchLocation,
-    LatLngBounds? bounds,
     List<DisplyPoint>? stations,
     MapType? mapType,
     bool? iswheatDisplay,
@@ -57,7 +54,6 @@ class MapState extends Equatable {
   }) {
     return MapState(
       status: status ?? this.status,
-      bounds: bounds ?? this.bounds,
       searchLocation: searchLocation ?? this.searchLocation,
       displayPoints: stations ?? displayPoints,
       mapType: mapType ?? this.mapType,
@@ -76,7 +72,6 @@ class MapState extends Equatable {
   @override
   List<Object?> get props => [
         status,
-        bounds,
         displayPoints,
         mapType,
         iswheatDisplay,

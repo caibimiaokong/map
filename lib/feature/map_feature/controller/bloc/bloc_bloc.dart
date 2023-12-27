@@ -64,7 +64,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       final searchLocation = await _mapRespository.determinePosition();
       emit(state.copyWith(
         status: MapStatus.loading,
-        searchLocation: searchLocation,
       ));
       final points = await _mapRespository.getDisplayPointsByLocation(
           longitude: searchLocation.longitude,
@@ -89,8 +88,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future _onFetchByBounds(FetchByBounds event, Emitter<MapState> emit) async {
     try {
       emit(state.copyWith(status: MapStatus.loading));
+      final visibleRegion = await _mapController!.getVisibleRegion();
       final points = await _mapRespository.getDisplayPointsByBounds(
-          state.bounds!,
+          visibleRegion,
           state.iswheatDisplay,
           state.isHarvestDisplay,
           state.isRescueDisplay);

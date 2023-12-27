@@ -11,10 +11,10 @@ import 'package:wheatmap/feature/map_feature/model/wheat_model.dart';
 import 'package:wheatmap/feature/map_feature/model/search_model.dart';
 
 class MapRespository {
-  final SupabaseClient _supabaseClient;
   MapRespository({
     required SupabaseClient supabaseClient,
   }) : _supabaseClient = supabaseClient;
+  final SupabaseClient _supabaseClient;
 
   //receive current location
   Future<LatLng> determinePosition() async {
