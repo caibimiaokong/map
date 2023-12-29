@@ -23,7 +23,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   final List<Widget> _page = <Widget>[
     const MapTab(),
     const ArticleUI(),
-    const ProfileScreen(),
+    const ProfileUI(),
   ];
 
   @override

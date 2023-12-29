@@ -21,28 +21,37 @@ class MapRespository {
     bool serviceEnabled;
     LocationPermission permission;
 
-    final result = await Geolocator.requestPermission();
-    if (result == LocationPermission.denied ||
-        result == LocationPermission.deniedForever) {
-      return const LatLng(37.43296265331129, -122.08832357078792);
-    }
-
-    //test location service whether enabled or not
+    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return const LatLng(37.43296265331129, -122.08832357078792);
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever ||
-          permission == LocationPermission.denied) {
-        return const LatLng(37.43296265331129, -122.08832357078792);
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
       }
     }
-    final position = await Geolocator.getCurrentPosition();
-    return LatLng(position.latitude, position.longitude);
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition().then((value) {
+      return LatLng(value.latitude, value.longitude);
+    });
   }
 
   //request Permission
@@ -112,7 +121,7 @@ class MapRespository {
     return points;
   }
 
-  Future searchPlace(String query) async {
+  Future<List<Resources>> searchPlace(String query) async {
     //write a http request to get the data
     final url = Uri.parse(
         'http://dev.virtualearth.net/REST/v1/Locations?q=$query&key=AtcygPzKZ_FIljRVWMdfKhcusLrvAg-JJ2Te1UOlObrPTAj8C0stK9CLNdFoOzJK');
@@ -123,6 +132,6 @@ class MapRespository {
     } else if (place.resourceSets == null) {
       throw PlatformException(code: 'searchPlace error null data');
     }
-    return place.resourceSets;
+    return place.resourceSets!.first.resources!;
   }
 }

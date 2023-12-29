@@ -12,7 +12,11 @@ class ArticleUI extends StatefulWidget {
   State<ArticleUI> createState() => _ArticleUIState();
 }
 
-class _ArticleUIState extends State<ArticleUI> with TickerProviderStateMixin {
+class _ArticleUIState extends State<ArticleUI>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late TabController _tabController;
   final _tabs = ['ClimateChange', 'AgriCulture', 'EnvironmentProtection'];
   int tabIndex = 0;
@@ -36,6 +40,7 @@ class _ArticleUIState extends State<ArticleUI> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocProvider(
       create: (context) => PostBloc()..add(PostFetchedAll()),
       child: Scaffold(

@@ -11,12 +11,11 @@ class MapSearchBar extends StatelessWidget {
   MapSearchBar({
     super.key,
   });
-
   final FloatingSearchBarController controller = FloatingSearchBarController();
 
   @override
   Widget build(BuildContext context) {
-    final mapBloc = context.read<MapBloc>();
+    final mapBloc = context.watch<MapBloc>();
     return FloatingSearchBar(
       automaticallyImplyBackButton: false,
       controller: controller,
@@ -43,8 +42,9 @@ class MapSearchBar extends StatelessWidget {
       progress: mapBloc.state.isSerachFocus,
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: (query) {
-        context.read<MapBloc>().add(SearchQueryChangedEvent(query));
+        mapBloc.add(SearchQueryChangedEvent(query));
       },
+      //check weather the tapkey is escape,if yes then clear the search query
       onKeyEvent: (KeyEvent value) {
         if (value.logicalKey == LogicalKeyboardKey.escape) {
           controller.query = '';

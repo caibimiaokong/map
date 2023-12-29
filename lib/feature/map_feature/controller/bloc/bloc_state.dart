@@ -39,7 +39,7 @@ class MapState extends Equatable {
   MapState copyWith({
     MapStatus? status,
     LatLng? searchLocation,
-    List<DisplyPoint>? stations,
+    List<DisplyPoint>? displayPoints,
     MapType? mapType,
     bool? iswheatDisplay,
     bool? isRescueDisplay,
@@ -55,7 +55,7 @@ class MapState extends Equatable {
     return MapState(
       status: status ?? this.status,
       searchLocation: searchLocation ?? this.searchLocation,
-      displayPoints: stations ?? displayPoints,
+      displayPoints: displayPoints ?? this.displayPoints,
       mapType: mapType ?? this.mapType,
       iswheatDisplay: iswheatDisplay ?? this.iswheatDisplay,
       isRescueDisplay: isRescueDisplay ?? this.isRescueDisplay,

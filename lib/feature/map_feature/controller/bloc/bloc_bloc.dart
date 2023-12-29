@@ -1,22 +1,27 @@
+import 'package:flutter/material.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:wheatmap/feature/map_feature/model/wheat_model.dart';
 import 'package:wheatmap/feature/map_feature/model/search_model.dart';
 import 'package:wheatmap/feature/map_feature/respository/respository.dart';
+import 'package:wheatmap/config.dart';
 
 part 'bloc_event.dart';
 part 'bloc_state.dart';
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final _levels = const [1.0, 4.25, 6.75, 8.25, 11.5, 14.5, 16.0, 16.5];
-  final MapRespository _mapRespository;
+
   GoogleMapController? _mapController;
-  MapBloc({required MapRespository mapRespository})
-      : _mapRespository = mapRespository,
-        super(const MapState()) {
+  final MapRespository _mapRespository = MapRespository(
+    supabaseClient: SupabaseClient(supabaseUrl, supabaseApikey),
+  );
+  MapBloc() : super(const MapState()) {
     on<FetchByLocation>((event, emit) {
       _onFetchByLocation;
     });
@@ -38,6 +43,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<SearchQueryChangedEvent>((event, emit) {
       _onSearchQueryChangedEvent;
     });
+
     on<AddToRecentSearchesEvent>((event, emit) {
       _onAddToRecentSearchesEvent;
     });
@@ -61,10 +67,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Future _onFetchByLocation(
       FetchByLocation event, Emitter<MapState> emit) async {
     try {
-      final searchLocation = await _mapRespository.determinePosition();
       emit(state.copyWith(
         status: MapStatus.loading,
       ));
+      final searchLocation = await _mapRespository.determinePosition();
+      _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: searchLocation,
+          zoom: _levels[0],
+        ),
+      ));
+      debugPrint('searchLocation:$searchLocation');
       final points = await _mapRespository.getDisplayPointsByLocation(
           longitude: searchLocation.longitude,
           latitude: searchLocation.latitude,
@@ -73,10 +86,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           isRescueDisplay: state.isRescueDisplay);
       emit(state.copyWith(
         status: MapStatus.loaded,
-        stations: points,
+        displayPoints: points,
         cameraPosition: CameraPosition(
           target: searchLocation,
-          zoom: _levels[0],
+          zoom: _levels[4],
         ),
       ));
     } catch (e) {
@@ -96,7 +109,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           state.isRescueDisplay);
       emit(state.copyWith(
         status: MapStatus.loaded,
-        stations: points,
+        displayPoints: points,
       ));
     } catch (e) {
       emit(state.copyWith(status: MapStatus.error));
@@ -157,8 +170,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future _onSearchQueryChangedEvent(
       SearchQueryChangedEvent event, Emitter<MapState> emit) async {
+    emit(state.copyWith(isSerachFocus: true, searchQuery: event.searchQuery));
     final searchResults = await _mapRespository.searchPlace(event.searchQuery);
-    emit(state.copyWith(resources: searchResults));
+    emit(state.copyWith(isSerachFocus: false, resources: searchResults));
   }
 
   Future _onAddToRecentSearchesEvent(
