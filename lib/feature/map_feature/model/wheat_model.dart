@@ -2,22 +2,22 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 
-class DisplyPoint with ClusterItem {
+class DisplayPoint with ClusterItem {
   final int id;
   final int type;
   final double longitude;
   final double latitude;
 
-  DisplyPoint({
+  DisplayPoint({
     required this.id,
     required this.type,
     required this.longitude,
     required this.latitude,
   });
 
-  static List<DisplyPoint> pointFromData({required List<dynamic> data}) {
+  static List<DisplayPoint> pointFromData({required List<dynamic> data}) {
     return data
-        .map<DisplyPoint>((row) => DisplyPoint(
+        .map<DisplayPoint>((row) => DisplayPoint(
               id: row['id'],
               type: row['type'],
               latitude: row['lat'],

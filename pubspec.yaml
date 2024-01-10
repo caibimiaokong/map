@@ -83,6 +83,8 @@ flutter:
   assets:
     - lib/feature/article_feature/assets/polar_bear_transformed.png
     - lib/feature/article_feature/assets/loading.gif
+    - lib/feature/map_feature/assets/image/map_type_normal.png
+    - lib/feature/map_feature/assets/image/map_type_satellite.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

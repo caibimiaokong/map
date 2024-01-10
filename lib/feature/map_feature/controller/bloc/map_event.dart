@@ -1,4 +1,4 @@
-part of 'bloc_bloc.dart';
+part of 'map_bloc.dart';
 
 abstract class MapEvent extends Equatable {
   const MapEvent();
@@ -6,9 +6,9 @@ abstract class MapEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchByLocation extends MapEvent {}
+class FetchPointByLocation extends MapEvent {}
 
-class FetchByBounds extends MapEvent {}
+class FetchPointByBounds extends MapEvent {}
 
 class ClusterPointTappedEvent extends MapEvent {
   final Cluster<ClusterItem> cluster;
@@ -20,9 +20,14 @@ class ChangeMapTypeEvent extends MapEvent {
   const ChangeMapTypeEvent(this.mapType);
 }
 
-class LocationRequestedEvent extends MapEvent {}
+class LocationRequestedEvent extends MapEvent {
+  final void Function() onLocationDenied;
+  const LocationRequestedEvent({required this.onLocationDenied});
+}
 
 class PermissionRequestEvent extends MapEvent {}
+
+class RemoveSelectedStationEvent extends MapEvent {}
 
 class SearchQueryChangedEvent extends MapEvent {
   final String searchQuery;
