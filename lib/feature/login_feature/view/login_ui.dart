@@ -7,16 +7,19 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(children: [
-        const Text('Login UI'),
-        ElevatedButton(
-          onPressed: () {
-            context.go('/home');
-          },
-          child: const Text('Map Screen'),
-        ),
-      ]),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const Text('Login UI'),
+          ElevatedButton(
+            onPressed: () {
+              context.go('/home');
+            },
+            child: const Text('Map Screen'),
+          ),
+        ]),
+      ),
     );
   }
 }

@@ -29,7 +29,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     mapController = controller;
   }
 
-  //fetch display points from supabase by location
+  //fetch user location
   Future _onFetchByLocation(
       FetchPointByLocation event, Emitter<MapState> emit) async {
     emit(state.copyWith(

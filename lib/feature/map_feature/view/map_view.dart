@@ -34,8 +34,6 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin {
             MapBloc(RepositoryProvider.of<MapRespository>(context))
               ..add(FetchPointByLocation()),
         child: Builder(builder: (context) {
-          final MapBloc mapBloc = context.read<MapBloc>();
-
           void showBottomSheet(BuildContext context) {
             showModalBottomSheet(
               shape: const RoundedRectangleBorder(
@@ -90,8 +88,8 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin {
                 right: 20,
                 child: InkWell(
                     onTap: () {
-                      mapBloc
-                          .add(LocationRequestedEvent(onLocationDenied: () {}));
+                      // mapBloc
+                      //     .add(LocationRequestedEvent(onLocationDenied: () {}));
                     },
                     child: const MapControllerButton(
                         svgPath:
@@ -114,18 +112,6 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin {
                     svgPath:
                         '<svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 256 256"><path fill="#0284c7" d="M240 113.58a15.76 15.76 0 0 1-11.29 15l-76.56 23.56l-23.56 76.56a15.77 15.77 0 0 1-15 11.29h-.3a15.77 15.77 0 0 1-15.07-10.67L33 53.41a1 1 0 0 1-.05-.16a16 16 0 0 1 20.3-20.35l.16.05l175.92 65.26A15.78 15.78 0 0 1 240 113.58Z"/></svg>')),
             // MapSearchBar(),
-            Center(
-              child: Column(
-                children: [
-                  Text(mapBloc.state.mapType.toString()),
-                  ElevatedButton(
-                      onPressed: () {
-                        mapBloc.add(FetchPointByLocation());
-                      },
-                      child: const Text('change state'))
-                ],
-              ),
-            )
           ]);
         }),
       ),

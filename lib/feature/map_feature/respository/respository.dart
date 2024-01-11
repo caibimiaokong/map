@@ -13,9 +13,8 @@ import 'package:geolocator/geolocator.dart';
 class MapRespository {
   MapRespository({
     required SupabaseClient supabaseClient,
-  });
-  // : _supabaseClient = supabaseClient;
-  // final SupabaseClient _supabaseClient;
+  }) : _supabaseClient = supabaseClient;
+  final SupabaseClient _supabaseClient;
 
   //receive current location
   Future<LatLng> determinePosition() async {
@@ -28,7 +27,6 @@ class MapRespository {
       return const LatLng(37.43296265331129, -122.08832357078792);
     }
 
-    // 测试location是否正常工作
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return const LatLng(37.43296265331129, -122.08832357078792);

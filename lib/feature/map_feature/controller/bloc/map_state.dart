@@ -61,12 +61,12 @@ class MapState extends Equatable {
   @override
   List<Object?> get props => [
         status,
-        displayPoint,
+        List.from(displayPoint),
         mapType,
         cameraPosition,
         selectedPoint,
         searchQuery,
-        recentSearches,
+        List.from(recentSearches),
         isWheatDisplay,
         isHarvestDisplay,
         isRescueDisplay,
