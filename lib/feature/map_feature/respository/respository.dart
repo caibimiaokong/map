@@ -2,9 +2,15 @@
 // import 'package:flutter/services.dart';
 // import 'dart:convert';
 
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:wheatmap/feature/map_feature/model/search_model.dart';
+import 'package:http/http.dart' as http;
 // import 'package:http/http.dart' as http;
 
 // import 'package:wheatmap/feature/map_feature/model/wheat_model.dart';
@@ -13,37 +19,34 @@ import 'package:geolocator/geolocator.dart';
 class MapRespository {
   MapRespository({
     required SupabaseClient supabaseClient,
-  }) : _supabaseClient = supabaseClient;
-  final SupabaseClient _supabaseClient;
+  });
+  // : _supabaseClient = supabaseClient;
+  // final SupabaseClient _supabaseClient;
 
   //receive current location
   Future<LatLng> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    final result = await Geolocator.requestPermission();
-    if (result == LocationPermission.denied ||
-        result == LocationPermission.deniedForever) {
-      return const LatLng(37.43296265331129, -122.08832357078792);
-    }
-
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return const LatLng(37.43296265331129, -122.08832357078792);
+      return Future.error('Location services are disabled.');
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever) {
-        return const LatLng(37.43296265331129, -122.08832357078792);
-      }
-
       if (permission == LocationPermission.denied) {
-        return const LatLng(37.43296265331129, -122.08832357078792);
+        return Future.error('Location permissions are denied');
       }
     }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
     final position = await Geolocator.getCurrentPosition();
+
     return LatLng(position.latitude, position.longitude);
   }
 
@@ -119,17 +122,19 @@ class MapRespository {
   //   return points;
   // }
 
-  // Future<List<Resources>> searchPlace(String query) async {
-  //   //write a http request to get the data
-  //   final url = Uri.parse(
-  //       'http://dev.virtualearth.net/REST/v1/Locations?q=$query&key=AtcygPzKZ_FIljRVWMdfKhcusLrvAg-JJ2Te1UOlObrPTAj8C0stK9CLNdFoOzJK');
-  //   final response = await http.get(url);
-  //   SearchPlace place = SearchPlace.fromJson(jsonDecode(response.body));
-  //   if (place.statusCode != 200) {
-  //     throw PlatformException(code: 'searchPlace error');
-  //   } else if (place.resourceSets == null) {
-  //     throw PlatformException(code: 'searchPlace error null data');
-  //   }
-  //   return place.resourceSets!.first.resources!;
-  // }
+  Future<List<Resources>> searchPlace(String query) async {
+    //write a http request to get the data
+    final url = Uri.parse(
+        'http://dev.virtualearth.net/REST/v1/Locations?q=$query&key=AtcygPzKZ_FIljRVWMdfKhcusLrvAg-JJ2Te1UOlObrPTAj8C0stK9CLNdFoOzJK');
+    final response = await http.get(url);
+    debugPrint('searchPlace: $response');
+    SearchPlace place = SearchPlace.fromJson(jsonDecode(response.body));
+    debugPrint('searchPlace: $place');
+    if (place.statusCode != 200) {
+      throw PlatformException(code: 'searchPlace error');
+    } else if (place.resourceSets == null) {
+      throw PlatformException(code: 'searchPlace error null data');
+    }
+    return place.resourceSets!.first.resources!;
+  }
 }

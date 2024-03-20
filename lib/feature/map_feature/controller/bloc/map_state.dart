@@ -9,10 +9,12 @@ class MapState extends Equatable {
   final CameraPosition cameraPosition;
   final DisplayPoint? selectedPoint;
   final String searchQuery;
+  final List<Resources> searchResult;
   final List<Resources> recentSearches;
   final bool isWheatDisplay;
   final bool isHarvestDisplay;
   final bool isRescueDisplay;
+  final bool isSerachFocus;
 
   const MapState({
     this.status = MapStatus.initial,
@@ -24,10 +26,12 @@ class MapState extends Equatable {
     ),
     this.selectedPoint,
     this.searchQuery = '',
+    this.searchResult = const <Resources>[],
     this.recentSearches = const <Resources>[],
     this.isWheatDisplay = true,
     this.isHarvestDisplay = true,
     this.isRescueDisplay = true,
+    this.isSerachFocus = false,
   });
 
   MapState copyWith({
@@ -38,10 +42,12 @@ class MapState extends Equatable {
     DisplayPoint? selectedPoint,
     bool clearSelectedStation = false,
     String? searchQuery,
+    List<Resources>? searchResult,
     List<Resources>? recentSearches,
     bool? isWheatDisplay,
     bool? isHarvestDisplay,
     bool? isRescueDisplay,
+    bool? isSerachFocus,
   }) {
     return MapState(
       status: status ?? this.status,
@@ -51,10 +57,12 @@ class MapState extends Equatable {
       selectedPoint:
           clearSelectedStation ? null : selectedPoint ?? this.selectedPoint,
       searchQuery: searchQuery ?? this.searchQuery,
+      searchResult: searchResult ?? this.searchResult,
       recentSearches: recentSearches ?? this.recentSearches,
       isWheatDisplay: isWheatDisplay ?? this.isWheatDisplay,
       isHarvestDisplay: isHarvestDisplay ?? this.isHarvestDisplay,
       isRescueDisplay: isRescueDisplay ?? this.isRescueDisplay,
+      isSerachFocus: isSerachFocus ?? this.isSerachFocus,
     );
   }
 
@@ -66,9 +74,11 @@ class MapState extends Equatable {
         cameraPosition,
         selectedPoint,
         searchQuery,
+        List.from(searchResult),
         List.from(recentSearches),
         isWheatDisplay,
         isHarvestDisplay,
         isRescueDisplay,
+        isSerachFocus,
       ];
 }

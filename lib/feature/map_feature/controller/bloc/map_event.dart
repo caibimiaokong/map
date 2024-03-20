@@ -6,7 +6,7 @@ abstract class MapEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchPointByLocation extends MapEvent {}
+class InitFetchByLocation extends MapEvent {}
 
 class FetchPointByBounds extends MapEvent {}
 
@@ -20,10 +20,7 @@ class ChangeMapTypeEvent extends MapEvent {
   const ChangeMapTypeEvent(this.mapType);
 }
 
-class LocationRequestedEvent extends MapEvent {
-  final void Function() onLocationDenied;
-  const LocationRequestedEvent({required this.onLocationDenied});
-}
+class LocationRequestedEvent extends MapEvent {}
 
 class PermissionRequestEvent extends MapEvent {}
 
