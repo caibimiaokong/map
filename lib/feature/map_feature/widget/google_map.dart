@@ -11,6 +11,7 @@ import 'package:wheatmap/feature/map_feature/controller/bloc/map_bloc.dart';
 import 'package:wheatmap/feature/map_feature/model/wheat_model.dart';
 import 'package:wheatmap/feature/map_feature/widget/display_points_icon.dart';
 import 'package:wheatmap/feature/map_feature/widget/map_controller_icon.dart';
+import 'package:wheatmap/feature/map_feature/widget/map_search_bar.dart';
 import 'package:wheatmap/feature/map_feature/widget/map_type_bottom_sheet.dart';
 // import 'package:wheatmap/feature/map_feature/widget/map_search_bar.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
@@ -201,7 +202,7 @@ class _MapViewState extends State<MapView> {
                   svgPath:
                       '<svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 256 256"><path fill="#0284c7" d="M240 113.58a15.76 15.76 0 0 1-11.29 15l-76.56 23.56l-23.56 76.56a15.77 15.77 0 0 1-15 11.29h-.3a15.77 15.77 0 0 1-15.07-10.67L33 53.41a1 1 0 0 1-.05-.16a16 16 0 0 1 20.3-20.35l.16.05l175.92 65.26A15.78 15.78 0 0 1 240 113.58Z"/></svg>'),
             )),
-        // MapSearchBar(),
+        MapSearchBar(),
       ]),
     );
   }

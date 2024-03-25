@@ -29,20 +29,35 @@ class MapSearchBar extends StatelessWidget {
           : -1.0,
       openAxisAlignment: 0.0,
       actions: [
-        FloatingSearchBarAction(
-          child: CircularButton(
-            icon: const Icon(Icons.place),
-            onPressed: () {
-              controller.clear();
-            },
+        const FloatingSearchBarAction(
+          showIfOpened: false,
+          child: Icon(
+            Icons.clear,
+            color: Colors.grey,
           ),
         ),
-        FloatingSearchBarAction.searchToClear(),
+        FloatingSearchBarAction.icon(
+          showIfClosed: false,
+          showIfOpened: true,
+          icon: const Icon(
+            Icons.clear,
+            color: Colors.grey,
+          ),
+          onTap: () {
+            if (controller.query.isEmpty) {
+              controller.close();
+            } else {
+              controller.clear();
+            }
+          },
+        ),
       ],
       progress: mapBloc.state.isSerachFocus,
       debounceDelay: const Duration(milliseconds: 500),
-      onQueryChanged: (query) {
-        mapBloc.add(SearchQueryChangedEvent(query));
+      onSubmitted: (query) {
+        if (query.isNotEmpty) {
+          mapBloc.add(SearchQueryChangedEvent(query));
+        }
       },
       //monitor keyboard event,check weather the tapkey is escape key,if yes then clear the search query
       onKeyEvent: (KeyEvent value) {
@@ -75,7 +90,7 @@ class MapSearchBar extends StatelessWidget {
                     style: const TextStyle(fontSize: 10),
                   ),
                   onTap: () {
-                    context.read<MapBloc>().add(PlaceSelectedViaSearchEvent(
+                    mapBloc.add(PlaceSelectedViaSearchEvent(
                         mapBloc.state.searchResult[index]));
                     controller.close();
                   },

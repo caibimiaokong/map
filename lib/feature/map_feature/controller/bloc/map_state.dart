@@ -10,7 +10,7 @@ class MapState extends Equatable {
   final DisplayPoint? selectedPoint;
   final String searchQuery;
   final List<Resources> searchResult;
-  final List<Resources> recentSearches;
+  // final List<Resources> recentSearches;
   final bool isWheatDisplay;
   final bool isHarvestDisplay;
   final bool isRescueDisplay;
@@ -27,7 +27,7 @@ class MapState extends Equatable {
     this.selectedPoint,
     this.searchQuery = '',
     this.searchResult = const <Resources>[],
-    this.recentSearches = const <Resources>[],
+    // this.recentSearches = const <Resources>[],
     this.isWheatDisplay = true,
     this.isHarvestDisplay = true,
     this.isRescueDisplay = true,
@@ -43,7 +43,7 @@ class MapState extends Equatable {
     bool clearSelectedStation = false,
     String? searchQuery,
     List<Resources>? searchResult,
-    List<Resources>? recentSearches,
+    // List<Resources>? recentSearches,
     bool? isWheatDisplay,
     bool? isHarvestDisplay,
     bool? isRescueDisplay,
@@ -58,7 +58,7 @@ class MapState extends Equatable {
           clearSelectedStation ? null : selectedPoint ?? this.selectedPoint,
       searchQuery: searchQuery ?? this.searchQuery,
       searchResult: searchResult ?? this.searchResult,
-      recentSearches: recentSearches ?? this.recentSearches,
+      // recentSearches: recentSearches ?? this.recentSearches,
       isWheatDisplay: isWheatDisplay ?? this.isWheatDisplay,
       isHarvestDisplay: isHarvestDisplay ?? this.isHarvestDisplay,
       isRescueDisplay: isRescueDisplay ?? this.isRescueDisplay,
@@ -75,7 +75,7 @@ class MapState extends Equatable {
         selectedPoint,
         searchQuery,
         List.from(searchResult),
-        List.from(recentSearches),
+        // List.from(recentSearches),
         isWheatDisplay,
         isHarvestDisplay,
         isRescueDisplay,

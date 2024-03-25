@@ -13,15 +13,14 @@ import 'package:wheatmap/feature/map_feature/model/search_model.dart';
 import 'package:http/http.dart' as http;
 // import 'package:http/http.dart' as http;
 
-// import 'package:wheatmap/feature/map_feature/model/wheat_model.dart';
+import 'package:wheatmap/feature/map_feature/model/wheat_model.dart';
 // import 'package:wheatmap/feature/map_feature/model/search_model.dart';
 
 class MapRespository {
   MapRespository({
     required SupabaseClient supabaseClient,
-  });
-  // : _supabaseClient = supabaseClient;
-  // final SupabaseClient _supabaseClient;
+  }) : _supabaseClient = supabaseClient;
+  final SupabaseClient _supabaseClient;
 
   //receive current location
   Future<LatLng> determinePosition() async {
@@ -62,65 +61,50 @@ class MapRespository {
   //   }
   // }
 
-  // Future getDisplayPointsByLocation(
-  //     {required double longitude,
-  //     required double latitude,
-  //     bool? iswheatDisplay = true,
-  //     bool? isRescueDisplay = true,
-  //     bool? isHarvestDisplay = true}) async {
-  //   late final PostgrestResponse res;
-  //   res = await _supabaseClient.rpc(
-  //     'display_point',
-  //     params: <String, dynamic>{
-  //       'long': longitude,
-  //       'lat': latitude,
-  //       'iswheat': iswheatDisplay,
-  //       'isharvest': isHarvestDisplay,
-  //       'isrescue': isRescueDisplay,
-  //     },
-  //   );
+  Future<List<DisplayPoint>> getDisplayPointsByLocation(
+      {required double longitude,
+      required double latitude,
+      bool? iswheatDisplay = true,
+      bool? isRescueDisplay = true,
+      bool? isHarvestDisplay = true}) async {
+    final res = await _supabaseClient.rpc(
+      'display_point',
+      params: <String, dynamic>{
+        'long': longitude,
+        'lat': latitude,
+        'iswheat': iswheatDisplay,
+        'isharvest': isHarvestDisplay,
+        'isrescue': isRescueDisplay,
+      },
+    );
+    debugPrint(res.toString());
+    return DisplayPoint.pointFromData(data: res);
+  }
 
-  //   final status = res.status;
-  //   final data = res.data;
-  //   if (status != 200) {
-  //     throw PlatformException(code: 'getVideosFromLocation error');
-  //   } else if (data == null) {
-  //     throw PlatformException(code: 'getVideosFromLocation error null data');
-  //   }
-  //   final points = DisplayPoint.pointFromData(
-  //     data: data,
-  //   );
-  //   return points;
-  // }
-
-  // Future getDisplayPointsByBounds(LatLngBounds bounds, bool iswheatDisplay,
-  //     bool isRescueDisplay, bool isHarvestDisplay) async {
-  //   late final PostgrestResponse res;
-  //   res = await _supabaseClient.rpc(
-  //     'points_in_view',
-  //     params: <String, dynamic>{
-  //       'min_long': bounds.southwest.longitude,
-  //       'min_lat': bounds.southwest.latitude,
-  //       'max_long': bounds.northeast.longitude,
-  //       'max_lat': bounds.northeast.latitude,
-  //       'iswheat': iswheatDisplay,
-  //       'isrescue': isRescueDisplay,
-  //       'isharvest': isHarvestDisplay,
-  //     },
-  //   );
-
-  //   final status = res.status;
-  //   final data = res.data;
-  //   if (status != 200) {
-  //     throw PlatformException(code: 'getVideosFromLocation error');
-  //   } else if (data == null) {
-  //     throw PlatformException(code: 'getVideosFromLocation error null data');
-  //   }
-  //   final points = DisplayPoint.pointFromData(
-  //     data: data,
-  //   );
-  //   return points;
-  // }
+  Future getDisplayPointsByBounds(
+      {required LatLngBounds bounds,
+      bool? iswheatDisplay = true,
+      bool isRescueDisplay = true,
+      bool isHarvestDisplay = true}) async {
+    final res = await _supabaseClient.rpc(
+      'points_in_view',
+      params: <String, dynamic>{
+        'min_long': '${bounds.southwest.longitude}',
+        'min_lat': '${bounds.southwest.latitude}',
+        'max_long': '${bounds.northeast.longitude}',
+        'max_lat': '${bounds.northeast.latitude}',
+        'iswheat': iswheatDisplay,
+        'isrescue': isRescueDisplay,
+        'isharvest': isHarvestDisplay,
+      },
+    );
+    if (res == null) {
+      throw PlatformException(code: 'getVideosFromLocation error null data');
+    }
+    return DisplayPoint.pointFromData(
+      data: res,
+    );
+  }
 
   Future<List<Resources>> searchPlace(String query) async {
     //write a http request to get the data

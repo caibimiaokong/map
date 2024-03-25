@@ -31,13 +31,6 @@ class SearchQueryChangedEvent extends MapEvent {
   const SearchQueryChangedEvent(this.searchQuery);
 }
 
-class AddToRecentSearchesEvent extends MapEvent {
-  final Resources place;
-  const AddToRecentSearchesEvent(this.place);
-}
-
-class ClearSearchQueryEvent extends MapEvent {}
-
 class PlaceSelectedViaSearchEvent extends MapEvent {
   final Resources selectedPlace;
   const PlaceSelectedViaSearchEvent(this.selectedPlace);

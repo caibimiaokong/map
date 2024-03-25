@@ -17,8 +17,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   GoogleMapController? mapController;
   final MapRespository mapRespository;
   MapBloc(this.mapRespository) : super(const MapState()) {
-    on<InitFetchByLocation>((event, emit) async {
-      await _initFetchByLocation(event, emit);
+    on<InitFetchByLocation>((event, emit) {
+      _initFetchByLocation(event, emit);
+    });
+    on<FetchPointByBounds>((event, emit) {
+      _fetchPointByBounds(event, emit);
     });
     on<ChangeMapTypeEvent>((event, emit) {
       _onChangeMapType(event, emit);
@@ -29,6 +32,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<SearchQueryChangedEvent>((event, emit) {
       _onSearchQueryChanged(event, emit);
     });
+    on<PlaceSelectedViaSearchEvent>((event, emit) {
+      _placeSelectedViaSearch(event, emit);
+    });
   }
 
   //init mapController
@@ -37,28 +43,54 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   //fetch user location
-  Future<void> _initFetchByLocation(
+  void _initFetchByLocation(
       InitFetchByLocation event, Emitter<MapState> emit) async {
     emit(state.copyWith(
       status: MapStatus.loading,
     ));
     try {
-      final searchLocation = await mapRespository.determinePosition();
-      debugPrint('searchLocation: $searchLocation');
+      final point = await mapRespository.determinePosition();
+      List<DisplayPoint> displaypoint =
+          await mapRespository.getDisplayPointsByLocation(
+              longitude: point.longitude, latitude: point.latitude);
       emit(state.copyWith(
         status: MapStatus.loaded,
         cameraPosition: CameraPosition(
-          target: searchLocation,
+          target: point,
           zoom: _levels[4],
         ),
+        displayPoint: displaypoint,
       ));
     } catch (e) {
+      debugPrint("an error occur $e");
+      // emit(state.copyWith(status: MapStatus.error));
+    }
+  }
+
+  void _fetchPointByBounds(
+      FetchPointByBounds event, Emitter<MapState> emit) async {
+    try {
+      emit(state.copyWith(
+        status: MapStatus.loading,
+      ));
+      var bounds = await mapController!.getVisibleRegion();
+      debugPrint(bounds.toString());
+      List<DisplayPoint> dispoint =
+          await mapRespository.getDisplayPointsByBounds(bounds: bounds);
+      debugPrint(dispoint.toString());
+      emit(state.copyWith(
+        status: MapStatus.loaded,
+        displayPoint: dispoint,
+      ));
+      // emit(state.copyWith(status: MapStatus.loaded, displayPoint: dispoint));
+    } on Exception catch (e) {
+      debugPrint("an error occur $e");
       emit(state.copyWith(status: MapStatus.error));
     }
   }
 
   //change map type
-  Future _onChangeMapType(
+  void _onChangeMapType(
       ChangeMapTypeEvent event, Emitter<MapState> emit) async {
     emit(state.copyWith(
       mapType: event.mapType,
@@ -66,7 +98,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   //get user location
-  Future _onLocationRequested(
+  void _onLocationRequested(
       LocationRequestedEvent event, Emitter<MapState> emit) async {
     try {
       final searchLocation = await mapRespository.determinePosition();
@@ -83,17 +115,35 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   //search query
-  Future _onSearchQueryChanged(
+  void _onSearchQueryChanged(
       SearchQueryChangedEvent event, Emitter<MapState> emit) async {
     emit(state.copyWith(
-      searchQuery: event.searchQuery,
       isSerachFocus: true,
     ));
     if (event.searchQuery.isNotEmpty) {
-      final searchResult = await mapRespository.searchPlace(event.searchQuery);
-      emit(state.copyWith(
-        recentSearches: searchResult,
-      ));
+      try {
+        final searchResult =
+            await mapRespository.searchPlace(event.searchQuery);
+        emit(state.copyWith(
+          searchResult: searchResult,
+          isSerachFocus: false,
+        ));
+      } catch (e) {
+        // emit(state.copyWith(
+        //   searchResult: [],
+        // ));
+        debugPrint("an error occur $e");
+      }
     }
+  }
+
+  void _placeSelectedViaSearch(
+      PlaceSelectedViaSearchEvent event, Emitter<MapState> emit) async {
+    mapController!.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: event.selectedPlace.point!.coordinates!,
+        zoom: _levels[4],
+      ),
+    ));
   }
 }

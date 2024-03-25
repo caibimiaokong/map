@@ -39,9 +39,14 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin {
                     child: CircularProgressIndicator(),
                   );
                 case MapStatus.loading:
-                  return MapView(mapType: state.mapType);
+                  return MapView(
+                    mapType: state.mapType,
+                    userLocation: state.cameraPosition,
+                  );
+                // return MapView(mapType: state.mapType);
                 case MapStatus.loaded:
                   return MapView(
+                    points: state.displayPoint,
                     mapType: state.mapType,
                     userLocation: state.cameraPosition,
                   );
